@@ -53,8 +53,8 @@ values (10, '안녕하세요 반갑습니다. 10번입니다'),
 
 select *
 from board_user
-         right join post p
-                    on board_user.id = p.board_user_id;
+right join post p
+on board_user.id = p.board_user_id;
 
 -- mysql 에서는 full outer join 지원 안함
 -- union 집합연산을 사용해서 full outer join 구현 가능
@@ -124,3 +124,64 @@ values ('user1', TRUE),
 select * from private_info1 as p1
 inner join private_info3 as p3
 using (name);
+
+create table device (
+    device_name varchar(20),
+    disk_size int
+);
+
+create table color_option (
+    color_name varchar(10)
+);
+
+insert into device values
+    ('Galaxy S24', 1024),
+    ('Galaxy S24', 512),
+    ('Galaxy S24', 256),
+    ('iPhone 15', 1024),
+    ('iPhone 15', 512),
+    ('iPhone 15', 256);
+insert into color_option values
+    ('black'),
+    ('blue'),
+    ('white');
+
+select *
+from device
+cross join color_option;
+
+create table staff (
+    id int primary key auto_increment,
+    name varchar(20),
+    job varchar(20),
+    salary int,
+    supervisor_id int -- self join key
+);
+
+insert into staff (name, job, salary, supervisor_id) values
+    ('staff1', '백엔드', 8500, null),
+    ('staff2', '인프라', 7500, null),
+    ('staff3', '보안', 7000, 1),
+    ('staff4', '프론트', 7200, 1),
+    ('staff5', '데이터분석가', 8500, 2),
+    ('staff6', '데이터엔지니어', 8000, 2),
+    ('staff7', '데브옵스', 7800, 2),
+    ('staff8', '유지보수', 6800, 10),
+    ('staff9', 'QA', 6500, 10),
+    ('staff10', 'PM', 7000, null);
+
+select s1.id, s1.name, s1.supervisor_id, s2.name
+FROM staff s1
+         inner join staff s2
+                   on s1.supervisor_id = s2.id;
+
+select s1.id, s1.name, s1.supervisor_id, s2.name
+FROM staff s1
+left join staff s2
+on s1.supervisor_id = s2.id;
+
+# select s1.id, s1.name, s1.supervisor_id, s2.name supervisor.name
+# FROM staff s1
+#          right join staff s2
+#                     on s1.supervisor_id = s2.id;
+
